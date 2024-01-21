@@ -4,8 +4,7 @@
   "scripts": {
     "build": "npx ts-node build.ts",
     "start": "node -r module-alias/register ./dist --env=production",
-    "dev": "nodemon",
-    "test": "nodemon --config ./spec/nodemon.json",
+    "dev": "pnpx nodemon",
     "test:no-reloading": "npx ts-node --files -r tsconfig-paths/register ./spec"
   },
   "nodemonConfig": {
@@ -52,7 +51,6 @@
     "find": "^0.3.0",
     "fs-extra": "^11.2.0",
     "nodemon": "^3.0.3",
-    "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.3.3"
   }
