@@ -9,14 +9,25 @@ export interface ITaskList {
   updatedAt: Date
 }
 
-const taskListSchema = new Schema<ITaskList>({
-  _id: { required: true, type: String },
-  createdAt: { required: true, type: Date },
-  description: { required: true, type: String },
-  name: { required: true, type: String },
-  tasks: { ref: "Task", required: true, type: [Types.ObjectId] },
-  updatedAt: { required: true, type: Date },
-})
+const taskListSchema = new Schema<ITaskList>(
+  {
+    _id: { required: true, type: String },
+    createdAt: { required: true, type: Date },
+    description: { required: true, type: String },
+    name: { required: true, type: String },
+    tasks: { ref: "Task", required: true, type: [Types.ObjectId] },
+    updatedAt: { required: true, type: Date },
+  },
+  {
+    virtuals: {
+      url: {
+        get(): string {
+          return `/taskList/${this._id}`
+        },
+      },
+    },
+  },
+)
 
 const TaskList = model<ITaskList>("TaskList", taskListSchema)
 
