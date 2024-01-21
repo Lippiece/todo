@@ -1,6 +1,6 @@
-import { model,Schema } from "mongoose"
+import { model, Schema } from "mongoose"
 
-interface ITask {
+export interface ITask {
   _id: string
   created_at: string
   description: string
