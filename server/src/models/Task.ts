@@ -1,6 +1,6 @@
-import { model, Schema } from "mongoose"
+import { Model, model, Schema } from "mongoose"
 
-export interface ITask {
+export interface TaskDocument {
   _id: string
   created_at: string
   description: string
@@ -9,8 +9,15 @@ export interface ITask {
   updated_at: string
 }
 
-const TaskSchema = new Schema<ITask>(
+export interface TaskVirtuals {
+  url: string
+}
+
+type TaskModel = Model<TaskDocument, Readonly<{}>, TaskVirtuals>
+
+const TaskSchema = new Schema<TaskDocument, TaskModel, TaskVirtuals>(
   {
+    _id: { required: true, type: String },
     created_at: { required: true, type: String },
     description: { required: true, type: String },
     name: { required: true, type: String },
@@ -20,7 +27,7 @@ const TaskSchema = new Schema<ITask>(
   {
     virtuals: {
       url: {
-        get(): string {
+        get() {
           return `/task/${this._id}`
         },
       },
@@ -28,6 +35,6 @@ const TaskSchema = new Schema<ITask>(
   },
 )
 
-const Task = model<ITask>("Task", TaskSchema)
+const Task = model<TaskDocument>("Task", TaskSchema)
 
 export default Task

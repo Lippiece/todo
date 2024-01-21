@@ -2,25 +2,19 @@
  * Setup express server.
  */
 
-import morgan from "morgan"
-import helmet from "helmet"
-import express, {
-  type Request,
-  type Response,
-  type NextFunction,
-} from "express"
-import logger from "jet-logger"
-
 import "express-async-errors"
-
-import Paths from "@src/constants/Paths"
 
 import EnvVars from "@src/constants/EnvVars"
 import HttpStatusCodes from "@src/constants/HttpStatusCodes"
-
 import { NodeEnvs } from "@src/constants/misc"
 import { RouteError } from "@src/other/classes"
+import express, { type Request, type Response } from "express"
+import helmet from "helmet"
+import logger from "jet-logger"
 import mongoose from "mongoose"
+import morgan from "morgan"
+
+import router from "./routes/api"
 
 // **** Variables **** //
 
@@ -29,17 +23,17 @@ const app = express()
 // **** Setup **** //
 
 // Mongoose
-const run = async () => {
+const connectToMongo = async () => {
   try {
     logger.info(`Connecting to ${EnvVars.MONGO}`)
     await mongoose.connect(EnvVars.MONGO)
     logger.info("MongoDB connected")
-  } catch (err) {
-    logger.err(err)
+  } catch (error) {
+    logger.err(error)
   }
 }
 
-run()
+connectToMongo()
 
 // Basic middleware
 app.use(express.json())
@@ -56,28 +50,21 @@ if (EnvVars.NodeEnv === NodeEnvs.Production.valueOf()) {
 }
 
 // Add APIs, must be after middleware
-//app.use(Paths.Base, BaseRouter)
+app.use("/", router)
 
 // Add error handler
-app.use(
-  (
-    err: Error,
-    _: Request,
-    res: Response,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    next: NextFunction,
-  ) => {
-    if (EnvVars.NodeEnv !== NodeEnvs.Test.valueOf()) {
-      logger.err(err, true)
-    }
-    let status = HttpStatusCodes.BAD_REQUEST
-    if (err instanceof RouteError) {
-      status = err.status
-    }
-    return res.status(status).json({ error: err.message })
-  },
-)
+app.use((error: Error, _: Request, res: Response) => {
+  if (EnvVars.NodeEnv !== NodeEnvs.Test.valueOf()) {
+    logger.err(error, true)
+  }
 
-// **** Export default **** //
+  let status = HttpStatusCodes.INTERNAL_SERVER_ERROR
+
+  if (error instanceof RouteError) {
+    status = error.status
+  }
+
+  return res.sendStatus(status)
+})
 
 export default app

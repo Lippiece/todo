@@ -1,52 +1,48 @@
-/*import { Router } from 'express';
-import jetValidator from 'jet-validator';
-
-import Paths from '../constants/Paths';
-import User from '@src/models/User';
-import UserRoutes from './UserRoutes';
-
+import HttpStatusCodes from "@src/constants/HttpStatusCodes"
+import paths from "@src/constants/paths"
+import {
+  taskAdd,
+  taskDelete,
+  taskGet,
+  taskGetAll,
+  taskListAdd,
+  taskListDelete,
+  taskListGet,
+  taskListGetAll,
+  taskListUpdate,
+  taskUpdate,
+} from "@src/controllers/task"
+import { Router } from "express"
+import jetPaths from "jet-paths"
 
 // **** Variables **** //
 
-const apiRouter = Router(),
-  validate = jetValidator();
+const router = Router()
 
+router.get("/", (_req, res) => {
+  res.redirect(jetPaths(paths).Base)
+})
 
-// ** Add UserRouter ** //
+router.get(jetPaths(paths).Base, (_req, res) => {
+  res.redirect(jetPaths(paths).health.Base)
+})
 
-const userRouter = Router();
+router.get(jetPaths(paths).health.Base, (_req, res) => {
+  res.sendStatus(HttpStatusCodes.OK)
+})
 
-// Get all users
-userRouter.get(
-  Paths.Users.Get,
-  UserRoutes.getAll,
-);
+// **** Routes **** //
 
-// Add one user
-userRouter.post(
-  Paths.Users.Add,
-  validate(['user', User.isUser]),
-  UserRoutes.add,
-);
+router.get(jetPaths(paths).task.Base, taskGetAll)
+router.get(jetPaths(paths).task.get, taskGet)
+router.post(jetPaths(paths).task.add, taskAdd)
+router.put(jetPaths(paths).task.update, taskUpdate)
+router.delete(jetPaths(paths).task.delete, taskDelete)
 
-// Update one user
-userRouter.put(
-  Paths.Users.Update,
-  validate(['user', User.isUser]),
-  UserRoutes.update,
-);
+router.get(jetPaths(paths).taskList.Base, taskListGetAll)
+router.get(jetPaths(paths).taskList.get, taskListGet)
+router.post(jetPaths(paths).taskList.add, taskListAdd)
+router.put(jetPaths(paths).taskList.update, taskListUpdate)
+router.delete(jetPaths(paths).taskList.delete, taskListDelete)
 
-// Delete one user
-userRouter.delete(
-  Paths.Users.Delete,
-  validate(['id', 'number', 'params']),
-  UserRoutes.delete,
-);
-
-// Add UserRouter
-apiRouter.use(Paths.Users.Base, userRouter);
-
-
-// **** Export default **** //
-
-export default apiRouter;*/
+export default router
