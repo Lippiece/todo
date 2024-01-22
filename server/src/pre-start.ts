@@ -6,30 +6,26 @@
 
 // NOTE: DO NOT IMPORT ANY SOURCE CODE HERE
 import path from "node:path"
-import dotenv from "dotenv"
+
+import { config } from "dotenv"
 import { parse } from "ts-command-line-args"
-
-// **** Types **** //
-
-interface IArgs {
-  env: string
-}
 
 // **** Setup **** //
 
 // Command line arguments
-const args = parse<IArgs>({
+const args = parse({
   env: {
-    type: String,
-    defaultValue: "development",
     alias: "e",
+    defaultValue: "development",
+    type: String,
   },
 })
 
 // Set the env file
-const result2 = dotenv.config({
+const dotenvConfig = config({
   path: path.join(__dirname, `../env/.env.${args.env}`),
 })
-if (result2.error) {
-  throw result2.error
+
+if (dotenvConfig.error) {
+  throw dotenvConfig.error
 }

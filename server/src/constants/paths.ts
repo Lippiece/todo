@@ -1,9 +1,9 @@
+import jetPaths from "jet-paths"
+
 const paths = {
   Base: "/api",
 
-  health: {
-    Base: "/health",
-  },
+  health: "/health",
 
   task: {
     add: "/:id/add",
@@ -20,6 +20,16 @@ const paths = {
     get: "/:id/",
     update: "/:id/update",
   },
+
+  taskLists: {
+    Base: "/taskLists",
+  },
+
+  tasks: {
+    Base: "/tasks",
+  },
 }
 
-export default paths
+const routes = jetPaths(paths)
+
+export default routes

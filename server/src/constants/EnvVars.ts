@@ -2,8 +2,6 @@
  * Environments variables declared here.
  */
 
-/* eslint-disable node/no-process-env */
-
 export default {
   CookieProps: {
     Key: "ExpressGeneratorTs",

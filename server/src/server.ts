@@ -8,7 +8,7 @@ import EnvVars from "@src/constants/EnvVars"
 import HttpStatusCodes from "@src/constants/HttpStatusCodes"
 import { NodeEnvs } from "@src/constants/misc"
 import { RouteError } from "@src/other/classes"
-import express, { type Request, type Response } from "express"
+import express, { json, type Request, type Response, urlencoded } from "express"
 import helmet from "helmet"
 import logger from "jet-logger"
 import mongoose from "mongoose"
@@ -36,8 +36,8 @@ const connectToMongo = async () => {
 connectToMongo()
 
 // Basic middleware
-app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
+app.use(json())
+app.use(urlencoded({ extended: true }))
 
 // Show routes called in console during development
 if (EnvVars.NodeEnv === NodeEnvs.Dev.valueOf()) {

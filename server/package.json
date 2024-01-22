@@ -5,7 +5,8 @@
     "build": "npx ts-node build.ts",
     "start": "node -r module-alias/register ./dist --env=production",
     "dev": "pnpx nodemon",
-    "test:no-reloading": "npx ts-node --files -r tsconfig-paths/register ./spec"
+    "test:no-reloading": "npx ts-node --files -r tsconfig-paths/register ./spec",
+    "test": "pnpx nodemon --exec 'pnpx ts-node -r tsconfig-paths/register test/task.test.ts' --watch test/"
   },
   "nodemonConfig": {
     "watch": [
@@ -27,6 +28,7 @@
     "dotenv": "^16.3.2",
     "express": "^4.18.2",
     "express-async-errors": "^3.1.1",
+    "express-async-handler": "^1.2.0",
     "helmet": "^7.1.0",
     "inserturlparams": "^1.0.1",
     "jet-logger": "^1.3.1",
@@ -43,7 +45,6 @@
     "@types/express": "^4.17.21",
     "@types/find": "^0.2.4",
     "@types/fs-extra": "^11.0.4",
-    "@types/jasmine": "^5.1.4",
     "@types/jsonfile": "^6.1.4",
     "@types/morgan": "^1.9.9",
     "@types/node": "^20.11.5",
@@ -51,6 +52,8 @@
     "find": "^0.3.0",
     "fs-extra": "^11.2.0",
     "nodemon": "^3.0.3",
-    "typescript": "^5.3.3"
+    "supertest": "^6.3.4",
+    "typescript": "^5.3.3",
+    "vitest": "^1.2.1"
   }
 }

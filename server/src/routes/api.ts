@@ -1,48 +1,46 @@
 import HttpStatusCodes from "@src/constants/HttpStatusCodes"
-import paths from "@src/constants/paths"
+import routes from "@src/constants/paths"
 import {
   taskAdd,
   taskDelete,
   taskGet,
   taskGetAll,
+  taskUpdate,
+} from "@src/controllers/task"
+import {
   taskListAdd,
   taskListDelete,
   taskListGet,
   taskListGetAll,
   taskListUpdate,
-  taskUpdate,
-} from "@src/controllers/task"
+} from "@src/controllers/taskList"
 import { Router } from "express"
-import jetPaths from "jet-paths"
-
-// **** Variables **** //
 
 const router = Router()
 
+// **** Routes **** //
+
+// Root
 router.get("/", (_req, res) => {
-  res.redirect(jetPaths(paths).Base)
+  res.redirect(routes.health)
 })
 
-router.get(jetPaths(paths).Base, (_req, res) => {
-  res.redirect(jetPaths(paths).health.Base)
-})
-
-router.get(jetPaths(paths).health.Base, (_req, res) => {
+router.get(routes.health, (_req, res) => {
   res.sendStatus(HttpStatusCodes.OK)
 })
 
-// **** Routes **** //
+// Tasks
+router.get(routes.tasks.Base, taskGetAll)
+router.get(routes.task.get, taskGet)
+router.post(routes.task.add, taskAdd)
+router.put(routes.task.update, taskUpdate)
+router.delete(routes.task.delete, taskDelete)
 
-router.get(jetPaths(paths).task.Base, taskGetAll)
-router.get(jetPaths(paths).task.get, taskGet)
-router.post(jetPaths(paths).task.add, taskAdd)
-router.put(jetPaths(paths).task.update, taskUpdate)
-router.delete(jetPaths(paths).task.delete, taskDelete)
-
-router.get(jetPaths(paths).taskList.Base, taskListGetAll)
-router.get(jetPaths(paths).taskList.get, taskListGet)
-router.post(jetPaths(paths).taskList.add, taskListAdd)
-router.put(jetPaths(paths).taskList.update, taskListUpdate)
-router.delete(jetPaths(paths).taskList.delete, taskListDelete)
+// Task Lists
+router.get(routes.taskLists.Base, taskListGetAll)
+router.get(routes.taskList.get, taskListGet)
+router.post(routes.taskList.add, taskListAdd)
+router.put(routes.taskList.update, taskListUpdate)
+router.delete(routes.taskList.delete, taskListDelete)
 
 export default router
