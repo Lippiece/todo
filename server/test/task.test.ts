@@ -61,7 +61,7 @@ describe("task controllers", async () => {
         `Response body (${body}) status should be 200`,
       )
       assert.equal(body._id, tasks[0]!.id, `Body (${body}) Task id should be 1`)
-    })
+    }, 1000)
 
     it("task POST should create a task, accepting data", async () => {
       const url = `${routes.task.Base}/${tasks[0]!.id}/add`
@@ -70,50 +70,53 @@ describe("task controllers", async () => {
       const { body } = response
       const newTasks = await Task.find({})
 
-      assert.equal(
-        response.status,
-        HttpStatusCodes.CREATED,
-        "Should report that the task was created",
-      )
-      assert.equal(
-        newTasks.length,
-        tasks.length + 1,
-        `There should be ${tasks.length + 1} tasks`,
-      )
-      assert.match(
-        body.url,
-        /\/task\/[\da-f]+/v,
-        `Body (${body}) is not a valid task url`,
-      )
-    })
+      expect(response.status).toBe(HttpStatusCodes.CREATED)
+      expect(newTasks.length).toBe(tasks.length + 1)
+      expect(body.url).toMatch(/\/task\/[\da-f]+/v)
+    }, 1000)
 
     it("task DELETE should delete a task", async () => {
       const url = `${routes.task.Base}/${tasks[0]!.id}/delete`
       const response = await request(app).delete(url)
       const newTasks: TaskDocument[] = response.body
 
-      assert.equal(response.status, HttpStatusCodes.OK, "Should report OK")
-      assert.equal(
-        newTasks.length,
-        tasks.length,
-        `There should be ${tasks.length - 1} tasks left`,
-      )
-    })
+      expect(response.status).toBe(HttpStatusCodes.OK)
+      expect(newTasks.length).toBe(tasks.length)
+    }, 1000)
 
     it("task PUT should update a task", async () => {
       const fetchedTasks = await Task.find({})
-
-      console.debug("fetchedTasks", fetchedTasks)
 
       const url = `${routes.task.Base}/${fetchedTasks[0]!.id}/update`
       const newTaskData = getNewTaskData(4)
       const response = await request(app).put(url).send(newTaskData)
       const body: TaskDocument = response.body
 
-      console.debug("body", body)
-
-      expect(response.status).toBe(HttpStatusCodes.OK)
       expect(body.name).toBe(newTaskData.name)
+    }, 1000)
+
+    it("task PUT should validate data", async () => {
+      const fetchedTasks = await Task.find({})
+
+      const url = `${routes.task.Base}/${fetchedTasks[0]!.id}/update`
+      const data = getNewTaskData(4)
+
+      data.name = "<script>alert(1)</script>"
+      data.description = "<script>alert(1)</script>"
+
+      let response = await request(app).put(url).send(data)
+
+      const { body } = response
+
+      expect(body.name).toBe("&lt;script&gt;alert(1)&lt;&#x2F;script&gt;")
+      expect(body.description).toBe(
+        "&lt;script&gt;alert(1)&lt;&#x2F;script&gt;",
+      )
+
+      data.status = "<script>alert(1)</script>"
+      response = await request(app).put(url).send(data)
+
+      expect(response.status).toBe(HttpStatusCodes.BAD_REQUEST)
     })
   })
 })

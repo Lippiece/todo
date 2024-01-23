@@ -2,6 +2,7 @@ import HttpStatusCodes from "@src/constants/HttpStatusCodes"
 import Task from "@src/models/Task"
 import type { Handler } from "express"
 import asyncHandler from "express-async-handler"
+import { body, validationResult } from "express-validator"
 
 export const taskGetAll: Handler = asyncHandler(async (_req, res) => {
   const tasks = await Task.find({}).exec()
@@ -24,28 +25,39 @@ export const taskAdd: Handler = asyncHandler(async (req, res) => {
   await task.save()
   res.status(HttpStatusCodes.CREATED).json({ url: task.url })
 })
-export const taskUpdate: Handler = asyncHandler(async (req, res) => {
-  const id = req.url.split("/").at(-2)
-  const task = await Task.findById(id).exec()
+export const taskUpdate: Handler = [
+  body("name").trim().escape().isLength({ min: 1 }),
+  body("description").trim().escape().isLength({ min: 1 }),
+  body("status").isIn(["todo", "doing", "done"]),
 
-  if (!task) {
-    res.sendStatus(HttpStatusCodes.NOT_FOUND)
+  asyncHandler(async (req, res, next) => {
+    const vaidation = validationResult(req)
 
-    return
-  }
-
-  Object.entries(req.body).map(([key, value]: [string, any]) => {
-    if (key in task) {
-      // @ts-expect-error
-      task[key] = value
+    if (!vaidation.isEmpty()) {
+      next(vaidation.array())
     }
 
-    task.updated_at = new Date()
-  })
-  await task.save()
+    const id = req.url.split("/").at(-2)
+    const task = await Task.findById(id).exec()
 
-  res.json(task)
-})
+    if (!task) {
+      res.sendStatus(HttpStatusCodes.NOT_FOUND)
+
+      return
+    }
+
+    Object.entries(req.body).map(([key, value]: [string, any]) => {
+      if (key in task) {
+        // @ts-expect-error
+        task[key] = value
+      }
+    })
+    task.updated_at = new Date()
+    await task.save()
+
+    res.json(task)
+  }),
+]
 export const taskDelete: Handler = asyncHandler(async (req, res) => {
   const url = req.url.split("/")
   const id = url.at(-2)

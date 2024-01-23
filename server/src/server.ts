@@ -7,7 +7,6 @@ import "express-async-errors"
 import EnvVars from "@src/constants/EnvVars"
 import HttpStatusCodes from "@src/constants/HttpStatusCodes"
 import { NodeEnvs } from "@src/constants/misc"
-import { RouteError } from "@src/other/classes"
 import express, { type ErrorRequestHandler, json, urlencoded } from "express"
 import helmet from "helmet"
 import logger from "jet-logger"
@@ -52,19 +51,16 @@ if (EnvVars.NodeEnv === NodeEnvs.Production.valueOf()) {
 // Add APIs, must be after middleware
 app.use("/", router)
 
-const errorHandler: ErrorRequestHandler = (error, _, res) => {
-  if (EnvVars.NodeEnv !== NodeEnvs.Test.valueOf()) {
-    logger.err(error, true)
+const errorHandler: ErrorRequestHandler = (error, _, res, _next) => {
+  logger.err(error, true)
+
+  if (error[0].location) {
+    return res.status(HttpStatusCodes.BAD_REQUEST).json(error)
   }
 
-  let status = HttpStatusCodes.INTERNAL_SERVER_ERROR
-
-  if (error instanceof RouteError) {
-    status = error.status
-  }
-
-  return res.send(status)
+  return res.sendStatus(error.status || HttpStatusCodes.INTERNAL_SERVER_ERROR)
 }
+
 // Add error handler
 app.use(errorHandler)
 
