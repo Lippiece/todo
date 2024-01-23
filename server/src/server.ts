@@ -8,7 +8,7 @@ import EnvVars from "@src/constants/EnvVars"
 import HttpStatusCodes from "@src/constants/HttpStatusCodes"
 import { NodeEnvs } from "@src/constants/misc"
 import { RouteError } from "@src/other/classes"
-import express, { json, type Request, type Response, urlencoded } from "express"
+import express, { type ErrorRequestHandler, json, urlencoded } from "express"
 import helmet from "helmet"
 import logger from "jet-logger"
 import mongoose from "mongoose"
@@ -52,8 +52,7 @@ if (EnvVars.NodeEnv === NodeEnvs.Production.valueOf()) {
 // Add APIs, must be after middleware
 app.use("/", router)
 
-// Add error handler
-app.use((error: Error, _: Request, res: Response) => {
+const errorHandler: ErrorRequestHandler = (error, _, res) => {
   if (EnvVars.NodeEnv !== NodeEnvs.Test.valueOf()) {
     logger.err(error, true)
   }
@@ -64,7 +63,9 @@ app.use((error: Error, _: Request, res: Response) => {
     status = error.status
   }
 
-  return res.sendStatus(status)
-})
+  return res.send(status)
+}
+// Add error handler
+app.use(errorHandler)
 
 export default app

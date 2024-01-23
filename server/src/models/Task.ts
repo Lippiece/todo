@@ -1,29 +1,24 @@
-import { type Model, model,Schema } from "mongoose"
+import { Schema, model } from "mongoose"
 
 export interface TaskDocument {
   _id: string
-  created_at: string
+  created_at: Date
   description: string
   name: string
   status: string
-  updated_at: string
-}
-
-export interface TaskVirtuals {
+  updated_at: Date
   url: string
 }
 
-type TaskModel = Model<TaskDocument, Readonly<{}>, TaskVirtuals>
-
-const TaskSchema = new Schema<TaskDocument, TaskModel, TaskVirtuals>({
-  created_at: { required: true, type: String },
+const TaskSchema = new Schema<TaskDocument>({
+  created_at: { required: true, type: Date },
   description: { required: true, type: String },
   name: { required: true, type: String },
   status: { required: true, type: String },
-  updated_at: { required: true, type: String },
+  updated_at: { required: true, type: Date },
 })
 
-TaskSchema.virtual("url").get(function (this: TaskDocument): string {
+TaskSchema.virtual("url").get(function (): string {
   return `/task/${this._id}`
 })
 

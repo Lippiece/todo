@@ -4,9 +4,8 @@
   "scripts": {
     "build": "npx ts-node build.ts",
     "start": "node -r module-alias/register ./dist --env=production",
-    "dev": "pnpx nodemon",
-    "test:no-reloading": "npx ts-node --files -r tsconfig-paths/register ./spec",
-    "test": "pnpx nodemon --exec 'pnpx ts-node -r tsconfig-paths/register test/task.test.ts' --watch test/"
+    "dev": "bun src/index.ts",
+    "test": "bun test --watch"
   },
   "nodemonConfig": {
     "watch": [
@@ -25,6 +24,7 @@
     "node": ">=8.10.0"
   },
   "dependencies": {
+    "@types/bun": "^1.0.3",
     "dotenv": "^16.3.2",
     "express": "^4.18.2",
     "express-async-errors": "^3.1.1",
