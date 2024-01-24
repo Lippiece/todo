@@ -1,4 +1,6 @@
 {
+  "$schema": "https://json.schemastore.org/package.json",
+  "proxy": "http://localhost:3000",
   "name": "vite-mern-template-client",
   "version": "1.0.2",
   "type": "module",
