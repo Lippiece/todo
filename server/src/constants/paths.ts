@@ -6,10 +6,10 @@ const paths = {
   health: "/health",
 
   task: {
-    add: "/:id/add",
+    add: "/add",
     Base: "/task",
     delete: "/:id/delete",
-    get: "/:id/",
+    get: "/:id",
     update: "/:id/update",
   },
 
@@ -27,6 +27,7 @@ const paths = {
 
   tasks: {
     Base: "/tasks",
+    deleteAll: "/deleteAll",
   },
 }
 

@@ -7,6 +7,7 @@ import "express-async-errors"
 import EnvVars from "@src/constants/EnvVars"
 import HttpStatusCodes from "@src/constants/HttpStatusCodes"
 import { NodeEnvs } from "@src/constants/misc"
+import cors from "cors"
 import express, { type ErrorRequestHandler, json, urlencoded } from "express"
 import helmet from "helmet"
 import logger from "jet-logger"
@@ -41,6 +42,7 @@ app.use(urlencoded({ extended: true }))
 // Show routes called in console during development
 if (EnvVars.NodeEnv === NodeEnvs.Dev.valueOf()) {
   app.use(morgan("dev"))
+  app.use(cors())
 }
 
 // Security
@@ -54,7 +56,7 @@ app.use("/", router)
 const errorHandler: ErrorRequestHandler = (error, _, res, _next) => {
   logger.err(error, true)
 
-  if (error[0].location) {
+  if (error[0]?.location) {
     return res.status(HttpStatusCodes.BAD_REQUEST).json(error)
   }
 

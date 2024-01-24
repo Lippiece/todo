@@ -15,16 +15,22 @@ export const taskGet: Handler = asyncHandler(async (req, res) => {
 
   res.json(task)
 })
-export const taskAdd: Handler = asyncHandler(async (req, res) => {
-  const task = new Task({
-    ...req.body,
-    created_at: new Date(),
-    updated_at: new Date(),
-  })
+export const taskAdd: Handler = [
+  body("name").trim().escape().isLength({ min: 1 }),
+  body("description").trim().escape().isLength({ min: 1 }),
+  body("status").isIn(["todo", "doing", "done"]),
 
-  await task.save()
-  res.status(HttpStatusCodes.CREATED).json({ url: task.url })
-})
+  asyncHandler(async (req, res) => {
+    const task = new Task({
+      ...req.body,
+      created_at: new Date(),
+      updated_at: new Date(),
+    })
+
+    await task.save()
+    res.status(HttpStatusCodes.CREATED).json({ url: task.url })
+  }),
+]
 export const taskUpdate: Handler = [
   body("name").trim().escape().isLength({ min: 1 }),
   body("description").trim().escape().isLength({ min: 1 }),
@@ -75,4 +81,10 @@ export const taskDelete: Handler = asyncHandler(async (req, res) => {
   const tasks = await Task.find({})
 
   res.json(tasks)
+})
+
+export const tasksDeleteAll: Handler = asyncHandler(async (_req, res) => {
+  await Task.deleteMany({})
+
+  res.sendStatus(HttpStatusCodes.NO_CONTENT)
 })

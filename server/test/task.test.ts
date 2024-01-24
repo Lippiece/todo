@@ -64,7 +64,7 @@ describe("task controllers", async () => {
     }, 1000)
 
     it("task POST should create a task, accepting data", async () => {
-      const url = `${routes.task.Base}/${tasks[0]!.id}/add`
+      const url = routes.task.add
       const newTaskData = getNewTaskData(4)
       const response = await request(app).post(url).send(newTaskData)
       const { body } = response

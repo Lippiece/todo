@@ -6,6 +6,7 @@ import {
   taskGet,
   taskGetAll,
   taskUpdate,
+  tasksDeleteAll,
 } from "@src/controllers/task"
 import {
   taskListAdd,
@@ -31,6 +32,8 @@ router.get(routes.health, (_req, res) => {
 
 // Tasks
 router.get(routes.tasks.Base, taskGetAll)
+router.delete(routes.tasks.deleteAll, tasksDeleteAll)
+console.log(routes.tasks.deleteAll)
 router.get(routes.task.get, taskGet)
 router.post(routes.task.add, taskAdd)
 router.put(routes.task.update, taskUpdate)
