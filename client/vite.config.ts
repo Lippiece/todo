@@ -11,7 +11,7 @@ export default defineConfig({
   server: {
     port: 3000,
     proxy: {
-      "/api": "http://localhost:3001",
+      "/api": "https://todo-app-yrhz.onrender.com/",
     },
   },
   plugins: [
@@ -22,9 +22,6 @@ export default defineConfig({
       },
     }),
   ],
-  build: {
-    outDir: "./build",
-  },
   test: {
     globals: true,
     environment: "jsdom",
