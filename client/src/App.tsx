@@ -22,13 +22,13 @@ const getTasks = async (setTasks: (tasks: Task[]) => void) => {
 
 const addTask = async (tasks: Task[], setTasks: (tasks: Task[]) => void) => {
   try {
-    const response = await axios.post("https://todo-app-yrhz.onrender.com/api/task/add", {
+    const response = await axios.post("https://todo-api.lippiece.ydns.eu/api/task/add", {
       name: "Task",
       status: "todo",
       description: "Description",
     })
     const { data: newTask } = await axios.get(
-      `https://todo-app-yrhz.onrender.com/api${response.data.url}`,
+      `https://todo-api.lippiece.ydns.eu/api${response.data.url}`,
     )
 
     setTasks([newTask, ...tasks])
@@ -44,7 +44,7 @@ const deleteTask = async (
 ) => {
   try {
     setTasks(tasks.filter(task => task._id !== _id))
-    await axios.delete(`https://todo-app-yrhz.onrender.com/api/task/${_id}/delete`)
+    await axios.delete(`https://todo-api.lippiece.ydns.eu/api/task/${_id}/delete`)
   } catch (error) {
     console.error(error)
   }
@@ -52,7 +52,7 @@ const deleteTask = async (
 
 const deleteAll = async (tasks: Task[], setTasks: (tasks: Task[]) => void) => {
   try {
-    tasks.length > 0 && (await axios.delete("https://todo-app-yrhz.onrender.com/api/tasks/deleteAll"))
+    tasks.length > 0 && (await axios.delete("https://todo-api.lippiece.ydns.eu/api/tasks/deleteAll"))
     setTasks([])
   } catch (error) {
     console.error(error)
@@ -69,7 +69,7 @@ const editTask = {
     try {
       if (!name || name === task.name) return
       if (!name) name = task.name
-      await axios.put(`https://todo-app-yrhz.onrender.com/api/task/${task._id}/update`, {
+      await axios.put(`https://todo-api.lippiece.ydns.eu/api/task/${task._id}/update`, {
         ...task,
         name,
       })
@@ -94,7 +94,7 @@ const editTask = {
   ) => {
     try {
       if (description === task.description) return
-      await axios.put(`https://todo-app-yrhz.onrender.com/api/task/${task._id}/update`, {
+      await axios.put(`https://todo-api.lippiece.ydns.eu/api/task/${task._id}/update`, {
         ...task,
         description,
       })
@@ -118,7 +118,7 @@ const editTask = {
   ) => {
     try {
       const newStatus = task.status === "todo" ? "doing" : "todo"
-      await axios.put(`https://todo-app-yrhz.onrender.com/api/task/${task._id}/update`, {
+      await axios.put(`https://todo-api.lippiece.ydns.eu/api/task/${task._id}/update`, {
         ...task,
         status: newStatus,
       })

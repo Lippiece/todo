@@ -11,7 +11,7 @@ export default defineConfig({
   server: {
     port: 3000,
     proxy: {
-      "/api": "https://todo-app-yrhz.onrender.com/",
+      "/api": "https://todo-api.lippiece.ydns.eu",
     },
   },
   plugins: [
