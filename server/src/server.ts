@@ -44,12 +44,13 @@ if (EnvVars.NodeEnv === NodeEnvs.Dev.valueOf()) {
   app.use(
     morgan(":method :url :status :res[content-length] - :response-time ms"),
   )
-  app.use(cors())  
 }
 
-app.use(cors({
-    origin: ["https://lippiece.github.io/todo/", "https://lippiece.github.io/"]
-}))
+app.use(cors())  
+
+//app.use(cors({
+  //  origin: ["https://lippiece.github.io/todo/", "https://lippiece.github.io/"]
+//}))
 
 // Security
 if (EnvVars.NodeEnv === NodeEnvs.Production.valueOf()) {
