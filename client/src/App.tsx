@@ -253,7 +253,7 @@ const App = () => {
   return (
     <div className="container px-4 mx-auto">
       <header className="flex flex-row gap-4">
-        <img src="/favicon.svg" alt="Task list logo" className="w-10 h-10" />
+        <img src="/todo/favicon.svg" alt="Task list logo" className="w-10 h-10" />
         <h1 className="text-2xl font-bold flex flex-row items-center gap-2">
           Tasks
         </h1>
