@@ -1,21 +1,21 @@
-import HttpStatusCodes from "@src/constants/HttpStatusCodes"
-import routes from "@src/constants/paths"
+import { Router } from "express"
+import HttpStatusCodes from "src/constants/HttpStatusCodes"
+import routes from "src/constants/paths"
 import {
   taskAdd,
   taskDelete,
   taskGet,
   taskGetAll,
-  taskUpdate,
   tasksDeleteAll,
-} from "@src/controllers/task"
+  taskUpdate,
+} from "src/controllers/task"
 import {
   taskListAdd,
   taskListDelete,
   taskListGet,
   taskListGetAll,
   taskListUpdate,
-} from "@src/controllers/taskList"
-import { Router } from "express"
+} from "src/controllers/taskList"
 
 const router = Router()
 
@@ -33,10 +33,9 @@ router.get(routes.health, (_req, res) => {
 // Tasks
 router.get(routes.tasks.Base, taskGetAll)
 router.delete(routes.tasks.deleteAll, tasksDeleteAll)
-console.log(routes.tasks.deleteAll)
 router.get(routes.task.get, taskGet)
 router.post(routes.task.add, taskAdd)
-router.put(routes.task.update, taskUpdate)
+router.put(routes.task.update, taskUpdate as any)
 router.delete(routes.task.delete, taskDelete)
 
 // Task Lists
