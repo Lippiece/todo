@@ -3,15 +3,10 @@
   "version": "1.0.2",
   "main": "backend/src/index.ts",
   "scripts": {
-    "watch": "tsc --watch",
-    "backend": "node --watch build/index.js",
-    "dev:be": "concurrently \"npm run watch\" \"npm run backend\"",
-    "dev:fe": "npm start --prefix ./frontend",
-    "check-types": "tsc",
-    "prettier": "prettier --write .",
-    "build:backend": "tsc",
-    "build:frontend": "npm run build --prefix ./frontend",
-    "build": "tsc && npm run build:frontend"
+    "build:client": "cd client && bun run build",
+    "start:client": "cd client && bun run preview",
+    "server": "bun server/src/index.ts --env=production",
+    "client": "cd client && bun run preview"
   },
   "repository": "https://github.com/apicgg/vite-mern-template.git",
   "license": "MIT",

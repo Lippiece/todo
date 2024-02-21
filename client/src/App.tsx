@@ -13,7 +13,7 @@ interface Task {
 const getTasks = async (setTasks: (tasks: Task[]) => void) => {
   try {
     const { data: tasks } = await axios.get(
-      "https://todo-api.lippiece.ydns.eu/api/tasks",
+      "http://localhost:4000/api/tasks",
     )
 
     tasks.length > 0 && setTasks(tasks)
@@ -25,7 +25,7 @@ const getTasks = async (setTasks: (tasks: Task[]) => void) => {
 const addTask = async (tasks: Task[], setTasks: (tasks: Task[]) => void) => {
   try {
     const response          = await axios.post(
-      "https://todo-api.lippiece.ydns.eu/api/task/add",
+      "http://localhost:4000/api/task/add",
       {
         description: "Description",
         name       : "Task",
@@ -33,7 +33,7 @@ const addTask = async (tasks: Task[], setTasks: (tasks: Task[]) => void) => {
       },
     )
     const { data: newTask } = await axios.get(
-      `https://todo-api.lippiece.ydns.eu/api${response.data.url}`,
+      `http://localhost:4000/api${response.data.url}`,
     )
 
     setTasks([newTask, ...tasks])
@@ -50,7 +50,7 @@ const deleteTask = async (
   try {
     setTasks(tasks.filter(task => task._id !== _id))
     await axios.delete(
-      `https://todo-api.lippiece.ydns.eu/api/task/${_id}/delete`,
+      `http://localhost:4000/api/task/${_id}/delete`,
     )
   } catch (error) {
     console.error(error)
@@ -61,7 +61,7 @@ const deleteAll = async (tasks: Task[], setTasks: (tasks: Task[]) => void) => {
   try {
     tasks.length > 0 &&
       (await axios.delete(
-        "https://todo-api.lippiece.ydns.eu/api/tasks/deleteAll",
+        "http://localhost:4000/api/tasks/deleteAll",
       ))
     setTasks([])
   } catch (error) {
@@ -80,7 +80,7 @@ const editTask = {
       if (description === task.description) return
 
       await axios.put(
-        `https://todo-api.lippiece.ydns.eu/api/task/${task._id}/update`,
+        `http://localhost:4000/api/task/${task._id}/update`,
         {
           ...task,
           description,
@@ -112,7 +112,7 @@ const editTask = {
 
       name ||= task.name
       await axios.put(
-        `https://todo-api.lippiece.ydns.eu/api/task/${task._id}/update`,
+        `http://localhost:4000/api/task/${task._id}/update`,
         {
           ...task,
           name,
@@ -142,7 +142,7 @@ const editTask = {
       const newStatus = task.status === "todo" ? "doing" : "todo"
 
       await axios.put(
-        `https://todo-api.lippiece.ydns.eu/api/task/${task._id}/update`,
+        `http://localhost:4000/api/task/${task._id}/update`,
         {
           ...task,
           status: newStatus,

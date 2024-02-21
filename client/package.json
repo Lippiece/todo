@@ -8,8 +8,8 @@
   "license": "MIT",
   "scripts": {
     "start": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview",
+    "build": "vite build",
+    "preview": "vite preview --host",
     "check-types": "tsc",
     "test": "vitest",
     "coverage": "vitest run --coverage"

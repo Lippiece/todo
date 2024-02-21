@@ -7,7 +7,6 @@ import svgrPlugin from "vite-plugin-svgr"
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: "/todo/",
   server: {
     port: 3000,
     proxy: {
