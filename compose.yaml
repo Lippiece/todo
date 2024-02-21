@@ -1,12 +1,14 @@
 ---
 services:
   client:
+    container_name: todo-client
     build:
       context: ./client
       cache_from: [localhost/todo-server:latest]
     ports: [4173:4173]
     environment: [NODE_ENV=production]
   server:
+    container_name: todo-server
     build:
       context: ./server
       cache_from: [localhost/todo-client:latest]
